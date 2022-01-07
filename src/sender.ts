@@ -1,5 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosError } from "axios";
 
+function prepare(): AxiosRequestConfig[] {
+  const opts = this.wordlist.map((w) =>
+    this.getAxiosOptions(packet, currentPath, w),
+  );
+  opts.push(this.getAxiosOptions(packet, currentPath, randomHex(32)));
+  [opts[0], opts[opts.length - 1]] = [opts[opts.length - 1], opts[0]]; // Make the first option as the random path (404 request)
+  return opts;
+}
+
 export async function sendOneRequest(opt: AxiosRequestConfig) {
   try {
     const resp = await axios.request(opt);
@@ -39,10 +48,7 @@ export async function sendAllRequests(requestsOptions: AxiosRequestConfig[]) {
   );
 }
 
-async prepareAndSendAll(
-  packet: PacketRequest,
-  currentPath: string,
-): Promise<[AxiosResponse[], Error]> {
+export async function prepareAndSendAll(): Promise<[AxiosResponse[], Error]> {
   const requestsOptions = this.prepare(packet, currentPath);
   const randomPathRequest = requestsOptions[0];
   const payloadRequests = requestsOptions.slice(1);

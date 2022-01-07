@@ -1,66 +1,47 @@
 #!/usr/bin/env node
 
-import { BustOption } from './types';
-import yargs from 'yargs';
-import { isString } from '@drstrain/drutil';
-import { fuzz } from './fuzz';
+import { exit } from 'process';
+import { initHandler, fuzzHandler, checkHandler } from './cmds';
 
-export async function main() {
-  const argv: BustOption = yargs
-  .option('method', {
-    alias: 'X',
-    describe: 'Method for path fuzzing, please refer to `require(\'http\').METHODS` for NodeJS supported methods',
-    type: 'string',
-    default: 'GET',
-  })
-  .option('url', {
-    alias: 'u',
-    describe: 'URL for path fuzzing',
-    type: 'string',
-    demandOption: true,
-  })
-  .option('output', {
-    alias: 'o',
-    describe: 'Choose place to store output, will be stdout if not specified',
-    type: 'string',
-    default: '',
-  })
-  .option('header', {
-    describe: 'Header to include in request, you may include multiple header',
-    type: 'string',
-    default: null,
-  })
-  .option('data', {
-    alias: 'd',
-    describe: 'Body to include in path fuzzing',
-    type: 'string',
-    default: '',
-  }).alias('h', 'help')
-  .option('verbose', {
-    describe: 'Run fuzzer verbosely',
-    type: 'boolean',
-    default: false,
-  })
-  .option('async', {
-    describe: 'Number of async requests',
-    type: 'number',
-    default: 5,
-  })
-  .option('sleep', {
-    describe: 'Sleep for some miliseconds between requests',
-    type: 'number',
-    default: 100,
-  })
-  .help().argv as any;
+function printHelp() {
+  const { argv } = process;
+  const paths = argv[1].split('/');
+  const bin = paths[paths.length - 1];
 
-  argv.header = argv.header || [];
-  if (isString(argv.header)) {
-    const header = (argv.header as any) as string;
-    argv.header = [header];
+  const help =
+    `Usage: ${bin} <command>
+
+Commands:
+    ${bin} run      Run strangebust
+    ${bin} init     Set cached options, you don't need to set the options again
+    ${bin} check    Check current cached options
+
+You need at least one command before moving on
+`;
+  console.log(help);
+}
+
+async function main() {
+  const { argv } = process;
+  const parsedArgv = argv.slice(3);
+  const command = argv[2];
+  switch (command) {
+    case 'init':
+      await initHandler(parsedArgv);
+      break;
+    case 'check':
+      await checkHandler(parsedArgv);
+      break
+    case 'path':
+      await pathHandler(parsedArgv);
+      break;
+    case 'packet':
+      await packetHandler(parsedArgv);
+      break
+    default:
+      printHelp();
   }
-
-  await fuzz(argv);
-
+  exit(0);
 }
 
 main();
