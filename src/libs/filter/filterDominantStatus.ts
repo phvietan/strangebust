@@ -1,6 +1,6 @@
 import { log } from '@drstrain/drutil';
 import { AxiosResponse } from 'axios';
-import { FilterResult } from '../types';
+import { FilterResult } from '../../types';
 
 var THRESHOLD_STATUS_CODE = 10 / 100; // 10%
 
@@ -24,9 +24,7 @@ export function filterDominantStatusCode(responses: AxiosResponse[]): FilterResu
     }
     return res;
   }).filter((res) => res !== null);
-  log(
-    `After filter dominant status code, ${qualified.length}/${responses.length}`,
-  );
+  log(`After filter dominant status code, ${qualified.length}/${responses.length}`);
   return {
     qualified,
     dirty,

@@ -1,5 +1,10 @@
+import { isString } from '@drstrain/drutil';
+import { BustOption } from '../types';
+import yargs from 'yargs';
+import { setBustOpt } from 'libs/bust';
+
 export async function fuzzHandler(args: string[]) {
-  const argv: BustOption = yargs
+  const argv: BustOption = yargs(args)
     .option('method', {
       alias: 'X',
       describe: 'Method for path fuzzing, please refer to `require(\'http\').METHODS` for NodeJS supported methods',
@@ -58,5 +63,6 @@ export async function fuzzHandler(args: string[]) {
     argv.header = [header];
   }
 
-  await fuzz(argv);
+  setBustOpt(argv);
+  await send(argv);
 }
