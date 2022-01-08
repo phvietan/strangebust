@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, Method } from "axios";
-import { getBustOpt } from "libs/bust";
+import { getBustOpt } from "../bust";
 import { parseHeaderMap } from "./parseHeaderMap";
 
 export function getOneRequestOption(wordlistPath: string): AxiosRequestConfig {

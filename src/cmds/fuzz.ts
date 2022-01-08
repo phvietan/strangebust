@@ -1,7 +1,9 @@
 import { isString } from '@drstrain/drutil';
 import { BustOption } from '../types';
 import yargs from 'yargs';
-import { setBustOpt } from 'libs/bust';
+import { setBustOpt } from '../libs/bust';
+import { sendPayloads } from '../libs/sender/sender';
+import { filter } from '../libs/filter/filter';
 
 export async function fuzzHandler(args: string[]) {
   const argv: BustOption = yargs(args)
@@ -35,25 +37,26 @@ export async function fuzzHandler(args: string[]) {
       default: '',
     }).alias('h', 'help')
     .option('verbose', {
-      describe: 'Run fuzzer verbosely',
+      describe: 'Run fuzzer verbosely (default true)',
       type: 'boolean',
-      default: false,
     })
     .option('async', {
-      describe: 'Number of async requests',
+      describe: 'Number of async requests (default 5)',
       type: 'number',
-      default: 5,
     })
     .option('sleep', {
-      describe: 'Sleep for some miliseconds between requests',
+      describe: 'Sleep for some miliseconds between requests (default 100ms)',
       type: 'number',
-      default: 100,
+    })
+    .option('timeout', {
+      alias: 't',
+      describe: 'Timeout in ms for each request (default 5000ms)',
+      type: 'number',
     })
     .option('wordlist', {
       alias: 'w',
-      describe: 'Wordlist file to start fuzzing',
+      describe: 'Wordlist file to start fuzzing (default ~/wordlists/dir.txt)',
       type: 'string',
-      default: './wordlist.txt',
     })
     .help().argv as any;
 
@@ -64,5 +67,6 @@ export async function fuzzHandler(args: string[]) {
   }
 
   setBustOpt(argv);
-  await send(argv);
+  const [randomResp, resps] = await sendPayloads();
+  filter(randomResp, resps);
 }

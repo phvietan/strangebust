@@ -32,12 +32,9 @@ async function main() {
     case 'check':
       await checkHandler(parsedArgv);
       break
-    case 'path':
-      await pathHandler(parsedArgv);
+    case 'run':
+      await fuzzHandler(parsedArgv);
       break;
-    case 'packet':
-      await packetHandler(parsedArgv);
-      break
     default:
       printHelp();
   }

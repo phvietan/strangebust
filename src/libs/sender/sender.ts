@@ -1,38 +1,24 @@
-import Bluebird from "bluebird";
-import { log, sleep } from '@drstrain/drutil';
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { getAllRequestOptions } from "./getAllRequestOptions";
 import { sendOneRequest } from "./sendOneRequest";
+import { errorLogVerbose, logVerbose } from "../logVerbose";
+import { sendAllRequests } from "./sendAllRequests";
+import { exit } from "process";
 
-export async function sendAllRequests(requestsOptions: AxiosRequestConfig[]) {
-  let cnt = 0;
-  return Bluebird.map(
-    requestsOptions,
-    async (opt) => {
-      await sleep(this.options.sleepRequest);
-      cnt += 1;
-      if (cnt % 30 === 0) {
-        this.logger.log(
-          `Done ${cnt}/${requestsOptions.length}: ${opt.baseURL}${opt.url}`,
-        );
-      }
-      return sendOneRequest(opt);
-    },
-    { concurrency: this.options.asyncRequest },
-  );
-}
-
-export async function prepareAndSendAll(): Promise<[AxiosResponse[], Error]> {
+export async function sendPayloads(): Promise<[AxiosResponse, AxiosResponse[]]> {
   const requestsOptions = getAllRequestOptions();
   const randomPathRequest = requestsOptions[0];
   const payloadRequests = requestsOptions.slice(1);
 
+  logVerbose('Sending one random path request to collect 404 page');
   const responseRandom = await sendOneRequest(randomPathRequest);
   if (responseRandom === null) {
-    return [[], new Error('Got error when GET random 404 page')];
+    errorLogVerbose('Got error when request random 404 page', true);
+    exit(1);
   }
 
-  const resps = await this.sendAllRequests(payloadRequests);
-  log(`Done ${requestsOptions.length}/${requestsOptions.length}: ${requestsOptions[0].baseURL}`);
-  return [resps, null];
+  logVerbose(`Sending requests with ${payloadRequests.length} payloads`);
+  const resps = await sendAllRequests(payloadRequests);
+  logVerbose(`Done ${requestsOptions.length}/${requestsOptions.length}: ${requestsOptions[0].baseURL}`);
+  return [responseRandom, resps];
 }

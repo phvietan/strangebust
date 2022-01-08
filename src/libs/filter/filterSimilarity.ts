@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { contentSimilarityScore } from "../lib/contentSimilarity";
-import { FilterResult } from "../types";
+import { contentSimilarityScore } from "./similarity";
+import { FilterResult } from "../../types";
 
 export function filterSimilar404(
   response404Data: AxiosResponse,

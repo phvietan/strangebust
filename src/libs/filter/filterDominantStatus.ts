@@ -24,7 +24,6 @@ export function filterDominantStatusCode(responses: AxiosResponse[]): FilterResu
     }
     return res;
   }).filter((res) => res !== null);
-  log(`After filter dominant status code, ${qualified.length}/${responses.length}`);
   return {
     qualified,
     dirty,

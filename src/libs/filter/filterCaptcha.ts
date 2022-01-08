@@ -1,11 +1,12 @@
 import { AxiosResponse } from "axios";
+import { errorLogVerbose } from "../logVerbose";
 import { contentSimilarityScore } from "./similarity";
 
-var THRESHOLD_CAPTCHA_CHECK = 3 / 100; // 33%
+var THRESHOLD_CAPTCHA_CHECK = 33 / 100; // 33%
 
 // If we reach captcha, our response will now be filled with lots of captcha page, so this is last filter
-export function filterCaptcha(qualifiedBefore: AxiosResponse[]): [AxiosResponse[], boolean] {
-  const threshold = Math.floor(THRESHOLD_CAPTCHA_CHECK * qualifiedBefore.length);
+export function filterCaptcha(qualifiedBefore: AxiosResponse[]): AxiosResponse[] {
+  const threshold = THRESHOLD_CAPTCHA_CHECK * qualifiedBefore.length;
   const checkbox = new Array(qualifiedBefore.length).fill(true);
   for (let i = qualifiedBefore.length - 1; i >= 0; --i) {
     let matched = 0;
@@ -20,5 +21,11 @@ export function filterCaptcha(qualifiedBefore: AxiosResponse[]): [AxiosResponse[
     if (matched > threshold) checkbox[i] = false;
   }
   const qualified = qualifiedBefore.filter((_, index) => checkbox[index]);
-  return [qualified, qualified.length !== qualifiedBefore.length];
+  if (qualified.length !== qualifiedBefore.length) {
+    errorLogVerbose(`CAPTCHA detected because the following response looks so alike, please check again:`);
+    qualifiedBefore.forEach((q, index) => {
+      if (!checkbox[index]) errorLogVerbose(`[CAPTCHA]: ${q.config.baseURL}${q.config.url}`);
+    });
+  }
+  return qualified;
 }
