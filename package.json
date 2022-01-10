@@ -1,6 +1,6 @@
 {
   "name": "@drstrain/strangebust",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI path fuzzing tool like gobuster that has heuristical guessing",
   "scripts": {
     "autobuild": "tsc --watch",
