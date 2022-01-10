@@ -1,16 +1,84 @@
 # Strangebust
 
-Heuristical path fuzzing tool like gobuster
+A CLI path fuzzing tool like gobuster that has heuristical guessing
 
 ## Installation:
 
 ```bash
-npm i -g strangebust
+npm i -g @drstrain/strangebust
 ```
 
 ## Usage:
 
-For example you want to fuzz path of `https://courses.fit.hcmus.edu.vn/`, run:
 ```bash
-strangebust https://courses.fit.hcmus.edu.vn/
+Usage: strangebust <command>
+
+Commands:
+    strangebust run      Run strangebust
+    strangebust init     Set cached options, you don't need to set the options again
+    strangebust check    Check current cached options
+
+You need at least one command before moving on
 ```
+
+Simplest usage:
+
+```bash
+strangebust run --url <url> -w <wordlist_file>
+```
+
+where <wordlist_file> is a file that contain newline seperated words. For example:
+
+![demo](https://user-images.githubusercontent.com/25105395/148744354-8df39988-e802-4823-878d-e5d452455e14.png)
+
+## Understanding methods and options
+
+### Run method
+
+```bash
+strangebust run --help
+```
+
+```bash
+Options:
+      --version   Show version number                                  [boolean]
+  -X, --method    Method for path fuzzing, please refer to
+                  `require('http').METHODS` for NodeJS supported methods
+                                                       [string] [default: "GET"]
+  -u, --url       URL for path fuzzing                                  [string]
+      --header    Header to include in request, you may include multiple header
+                                                        [string] [default: null]
+  -d, --data      Body to include in path fuzzing         [string] [default: ""]
+  -f, --file      Run fuzz on URLs in <filename>, newline seperated     [string]
+  -o, --output    Choose place to store output, will be stdout if not specified
+                                                          [string] [default: ""]
+      --verbose   Run fuzzer verbosely (default true)                  [boolean]
+      --async     Number of async requests (default 5)                  [number]
+      --sleep     Sleep for some miliseconds between requests (default 100ms)
+                                                                        [number]
+  -t, --timeout   Timeout in ms for each request (default 5000ms)       [number]
+  -w, --wordlist  Wordlist file to start fuzzing (default ~/wordlists/dir.txt)
+                                                                        [string]
+  -h, --help      Show help                                            [boolean]
+```
+
+The 5 following options are cumbersome if each time you run you must specify them again: `verbose`, `async`, `sleep`, `timeout`, `wordlist`. Thus, you can cache these options using `strangebust init` and `strangebust check`.
+
+### Init method
+
+Check help at: `strangebust init --help`
+
+For example, if you want to use wordlist at `~/wordlists/common.txt`:
+```bash
+strangebust init --wordlist ~/wordlists/common.txt
+strangebust run -u https://codeforces.com/ # No need to specify wordlist again
+```
+
+Similarly, you can cache `verbose`, `async`, `sleep`, `timeout`, `wordlist` using the same trick.
+
+### Check method
+
+The check method checks your init variables are correctly set or not. Using unknown wordlist file will cause check method output error message
+
+![demo2](https://user-images.githubusercontent.com/25105395/148746380-afd52218-1fe8-4380-8d24-5b48d801c10f.png)
+
