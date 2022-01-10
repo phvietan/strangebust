@@ -5,8 +5,11 @@
     "baseUrl": "./src/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "out",
-    "watch": true
+    "outDir": "out"
   },
-  "exclude": ["test","legacy","node_modules"]
+  "exclude": [
+    "test",
+    "legacy",
+    "node_modules"
+  ]
 }

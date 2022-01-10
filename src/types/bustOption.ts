@@ -6,4 +6,5 @@ export interface BustOption extends CacheOption {
   header: string[],
   data: string,
   method: string,
+  file: string,
 }

@@ -1,0 +1,4 @@
+test*.txt
+.cache.json
+pump_version.js
+src

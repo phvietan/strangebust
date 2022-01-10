@@ -12,6 +12,7 @@ var bustOpt: BustOption = {
   wordlist: '',
   verbose: true,
   timeout: 5000,
+  file: '',
 }
 
 export function getBustOpt(): BustOption {

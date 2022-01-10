@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { errorLogVerbose } from "../logVerbose";
+import { errorLogBust } from "../logBust";
 import { contentSimilarityScore } from "./similarity";
 
 var THRESHOLD_CAPTCHA_CHECK = 33 / 100; // 33%
@@ -22,9 +22,9 @@ export function filterCaptcha(qualifiedBefore: AxiosResponse[]): AxiosResponse[]
   }
   const qualified = qualifiedBefore.filter((_, index) => checkbox[index]);
   if (qualified.length !== qualifiedBefore.length) {
-    errorLogVerbose(`CAPTCHA detected because the following response looks so alike, please check again:`);
+    errorLogBust(`CAPTCHA detected because the following response looks so alike, please check again:`);
     qualifiedBefore.forEach((q, index) => {
-      if (!checkbox[index]) errorLogVerbose(`[CAPTCHA]: ${q.config.baseURL}${q.config.url}`);
+      if (!checkbox[index]) errorLogBust(`[CAPTCHA]: ${q.config.baseURL}${q.config.url}`);
     });
   }
   return qualified;

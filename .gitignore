@@ -2,3 +2,5 @@ out
 node_modules
 .cache.json
 test.txt
+testurl.txt
+testwordlist.txt
