@@ -14,7 +14,7 @@
   ],
   "private": false,
   "bin": {
-    "strangebust": "./out/index.js"
+    "strangebust": "out/index.js"
   },
   "author": "drstrnegth",
   "license": "MIT",
@@ -29,5 +29,14 @@
     "axios": "^0.24.0",
     "bluebird": "^3.7.2",
     "yargs": "^17.3.1"
-  }
+  },
+  "main": "out/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phvietan/strangebust.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phvietan/strangebust/issues"
+  },
+  "homepage": "https://github.com/phvietan/strangebust#readme"
 }
