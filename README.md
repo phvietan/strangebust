@@ -1,11 +1,11 @@
-# Strangebust
+# strangebust
 
 In some web applications, pathfinding tasks in reconnaissance is cumbersome because of the following scenarios:
-- Sending HTTP requests to 404 page will also receive 200 OK status code but with a 404 customized HTML page.
+- Sending HTTP requests to 404 page but receive 200 OK status code with a 404 customized HTML page.
 - Sending HTTP requests too much that triggers a DDOS protection and it appears Captcha page.
 - Sometimes server return 400, sometimes server returns 500, etc, you get the point.
 
-Thus, strangebust is a CLI pathfinding reconnaissance tool that just like [gobuster](https://github.com/OJ/gobuster) but it also detects the strange behavior of a webapp when attempting to fuzz the api endpoints.
+Thus, strangebust is a CLI pathfinding reconnaissance tool that just like [gobuster](https://github.com/OJ/gobuster) but it also detects the strange behavior of a webapp when doing pathfinding on the web endpoints.
 
 For more information on the algorithm, please refer to <a href="/ALGORITHM.md">ALGORITHM.md</a>
 
